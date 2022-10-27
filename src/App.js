@@ -5,6 +5,7 @@ import Filter from './components/Filter'
 import PersonForm from "./components/PersonForm";
 import Phonebook from "./components/Phonebook";
 import Notification from "./components/Notification";
+import Header from "./components/Header";
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -13,6 +14,7 @@ const App = () => {
   const [filterName, setFilterName] = useState('')
   const [errorMessage, setErrorMessage] = useState(null)
   const [successMessage, setSuccessMessage] = useState(null)
+  const [showAddTask, setShowAddTask] = useState(false)
 
 //useEffect executes afer render
   useEffect(() => {
@@ -20,10 +22,13 @@ const App = () => {
       .getAll()
       .then(initialPeople => {
         setPersons(initialPeople)
+        console.log(initialPeople)
       })
       .catch(error => console.error(error))
 	  //using the [] parameter, we tell React to only execute the useEffect once
   }, [])
+
+
 
 
   //set the state of the variables above to the value typed in the input fields
@@ -61,8 +66,8 @@ const App = () => {
 				setSuccessMessage(`Successfully changed ${newName}'s contact number`)
 			})
 			.catch(error => console.error(error))
-		}
-    }
+		}}
+
     else{
       if(newName === "" || newNumber === ""){
         setErrorMessage('The name or number must not be empty')
@@ -93,7 +98,6 @@ const App = () => {
   }
 
   const removeEntry = (personID) => {
-	if(window.confirm('Do you wish to delete this person')){
 		personsService
 		.deleteName(personID)
 		.then(() => {
@@ -110,23 +114,24 @@ const App = () => {
 			}, 5000);
 		})
 	}
-  }
+
 
   return (
-    <div>
-      <h2>Phonebook</h2>
-	  <Notification error={errorMessage} success={successMessage}/>
-      Filter shown with
-      <Filter value={filterName} onChange={handleNameFilter}/>
-      <h2>Add a new</h2>
+    <div className="container">
+      <Header onAdd = {()=> setShowAddTask(!showAddTask)} title="Phonebook" showAdd={showAddTask}/>
+	    <Notification error={errorMessage} success={successMessage}/>
+      { showAddTask &&
       <PersonForm 
+        title = {'Add a new'}
         addName = {addName}
         newName={newName}
         newNumber={newNumber}
         handleNameChange={handleNameChange}
         handleNumberChanges={handleNumberChanges}
-      />
-      <h2>Numbers</h2>
+      />}
+      <h3>Filter: </h3>
+      <Filter value={filterName} onChange={handleNameFilter}/>
+      <h3>Numbers</h3>
       <ul>
         <Phonebook persons={persons} filterName={filterName} removeEntry={removeEntry}/>
       </ul>
