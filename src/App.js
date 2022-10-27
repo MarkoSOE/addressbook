@@ -22,12 +22,22 @@ const App = () => {
       .getAll()
       .then(initialPeople => {
         setPersons(initialPeople)
-        console.log(initialPeople)
       })
       .catch(error => console.error(error))
 	  //using the [] parameter, we tell React to only execute the useEffect once
   }, [])
 
+  const toggleImportance = (id) => {
+    //get the task that was clicked
+    const person = persons.find(person => person.id === id)
+    //create a new object with the same properties as the task object
+    const changedPerson = {...person, important: !person.important}
+    personsService
+    .replacePerson(id, changedPerson)
+    .then(returnedPerson => {
+      setPersons(persons.map(person => person.id !== id ? person : returnedPerson))
+    })
+  }
 
 
 
@@ -133,7 +143,7 @@ const App = () => {
       <Filter value={filterName} onChange={handleNameFilter}/>
       <h3>Numbers</h3>
       <ul>
-        <Phonebook persons={persons} filterName={filterName} removeEntry={removeEntry}/>
+        <Phonebook persons={persons} filterName={filterName} removeEntry={removeEntry} toggleImportance={toggleImportance}/>
       </ul>
     </div>
   )

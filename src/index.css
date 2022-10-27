@@ -99,7 +99,7 @@ body {
   cursor: pointer;
 }
 
-.person.reminder {
+.person.important {
   border-left: 5px solid green;
 }
 

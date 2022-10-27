@@ -23,7 +23,6 @@ const replacePerson = (personID, personObject) => {
 }
 
 //have to export this as an object for it to be used in another js file
-
 const exportedObject = {create, getAll, deleteName, replacePerson}
 
 export default exportedObject
